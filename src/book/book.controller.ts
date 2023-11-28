@@ -1,16 +1,22 @@
-import { Body, Controller, Get, Param, ParseBoolPipe, ParseFloatPipe, ParseIntPipe, Post } from "@nestjs/common";
+import { BadRequestException,UseFilters, Body, Controller, Get, Param, ParseIntPipe, Post, ValidationPipe } from "@nestjs/common";
 import { BookDto } from "src/dto/book.dto";
-import { BookPipe } from "src/pipes/book.pipes";
+import { BookException } from "./book.exception";
+import { BookCustomExceptionFilter } from "./book.exception.filter";
 
 @Controller("book")
+@UseFilters(BookCustomExceptionFilter)
 export class BookController{
     @Get("/:id")
-    findBookById(@Param("id",ParseBoolPipe) id :number):string{
+    findBookById(@Param("id",ParseIntPipe) id :number):string{
         console.log(id,"type:",typeof(id))
         return `this is book by id:${id}`
     }
+    @Get("")
+    findBook():string{
+        throw new BadRequestException()
+    }
     @Post("/add")
-    addBook(@Body(new BookPipe()) book:BookDto):string{
+    addBook(@Body(new ValidationPipe()) book:BookDto):string{
         return "book added successfully"
     }
 }
