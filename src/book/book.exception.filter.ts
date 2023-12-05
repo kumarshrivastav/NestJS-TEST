@@ -11,7 +11,7 @@ export class BookCustomExceptionFilter implements ExceptionFilter{
         response.status(status).json({
             status:status,
             timeStamp:new Date().toISOString(),
-            url:request.baseUrl,
+            url:request.url,
             host:request.get('host'),
             method:request.method
         })
